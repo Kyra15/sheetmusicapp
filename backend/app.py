@@ -5,7 +5,7 @@ from flask import Flask, jsonify, request, send_from_directory, abort
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
-from models import db, Score, PageAnnotation
+from .models import db, Score, PageAnnotation
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 STORAGE_DIR = os.path.join(BASE_DIR, "storage")
