@@ -1,9 +1,4 @@
 import type { PageAnnotation, Score, Stroke } from "../types";
-
-// In dev, Vite proxies /api -> the Flask server (see vite.config.ts), so we
-// can just use relative paths and it works the same in prod once you build
-// the frontend and serve it behind the same origin as the API (or set
-// VITE_API_BASE_URL to point at a deployed Flask host).
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {

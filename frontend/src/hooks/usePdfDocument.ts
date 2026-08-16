@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import type { PDFDocumentProxy } from "pdfjs-dist";
-// Vite's ?url import gives us a fingerprinted URL to the worker file it
-// bundles, which is the recommended way to wire up pdf.js's worker in a
-// Vite app (avoids manually copying the file into /public).
 import pdfjsWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorkerUrl;

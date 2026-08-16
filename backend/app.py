@@ -23,7 +23,7 @@ from models import db, Score, PageAnnotation
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 STORAGE_DIR = os.path.join(BASE_DIR, "storage")
 ALLOWED_EXTENSIONS = {"pdf"}
-MAX_CONTENT_LENGTH = 64 * 1024 * 1024  # 64MB, sheet music PDFs are usually small
+MAX_CONTENT_LENGTH = 64 * 1024 * 1024
 
 
 def create_app():
@@ -34,7 +34,7 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH
 
-    CORS(app)  # dev-friendly; lock this down to your frontend origin in prod
+    CORS(app)
     db.init_app(app)
 
     with app.app_context():
