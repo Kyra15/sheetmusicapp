@@ -1,0 +1,11 @@
+- [ ] fix nod sensitivity to save between switching pages
+- [X] fix fonts
+- [X] fix naming
+- [X] get rid of composer attribute?
+- [X] allow for file renaming
+- [X] understand the vite stuff
+- [ ] undo and redo
+- [X] fix tool highlighting
+- [X] fix tool icons and titles
+- [ ] add metronome
+- [X] add little thumbnails

@@ -1,0 +1,17 @@
+# backend
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/segno.db
+backend/storage/*
+!backend/storage/.gitkeep
+
+# frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# misc
+.DS_Store
+*.log
+chatread.md
