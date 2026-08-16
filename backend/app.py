@@ -108,7 +108,6 @@ def register_routes(app: Flask):
             STORAGE_DIR, score.filename, mimetype="application/pdf"
         )
 
-    # ---------------------------------------------------------- annotations
     @app.get("/api/scores/<int:score_id>/annotations")
     def list_annotations(score_id):
         db.session.get(Score, score_id) or abort(404)
