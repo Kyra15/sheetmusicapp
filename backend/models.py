@@ -1,10 +1,3 @@
-"""SQLAlchemy models for Segno.
-
-A Score is one uploaded PDF (a piece of sheet music). Each Score has many
-PageAnnotation rows -- one per PDF page that has ink on it. We only create
-a PageAnnotation row the first time a page is drawn on, so an untouched
-150-page score costs almost nothing to store.
-"""
 from datetime import datetime, timezone
 
 from flask_sqlalchemy import SQLAlchemy
@@ -22,7 +15,7 @@ class Score(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     composer = db.Column(db.String(255), nullable=True)
-    filename = db.Column(db.String(255), nullable=False)  # name on disk in storage/
+    filename = db.Column(db.String(255), nullable=False)
     original_filename = db.Column(db.String(255), nullable=False)
     page_count = db.Column(db.Integer, nullable=False, default=0)
     last_opened_page = db.Column(db.Integer, nullable=False, default=1)

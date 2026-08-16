@@ -1,16 +1,3 @@
-"""Segno backend.
-
-A small Flask API that stores PDF sheet music and per-page ink annotations
-for the Segno note-taking app. Everything is file-based / SQLite so it runs
-with zero external services -- good enough for a single musician's practice
-setup; swap SQLALCHEMY_DATABASE_URI for Postgres etc. if you need multi-user.
-
-Run:
-    cd backend
-    python -m venv .venv && source .venv/bin/activate
-    pip install -r requirements.txt
-    flask --app app run --debug --port 5001
-"""
 import os
 import uuid
 
