@@ -3,3 +3,4 @@ flask-cors
 werkzeug
 flask-sqlalchemy
 python-dotenv
+supabase
