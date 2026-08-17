@@ -5,10 +5,7 @@ from flask import Flask, jsonify, request, redirect, abort
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from supabase import create_client, Client
-from postgrest import APIError
 from dotenv import load_dotenv
-
-from .models import db, Score, PageAnnotation
 
 load_dotenv()
 
