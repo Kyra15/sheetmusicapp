@@ -20,7 +20,7 @@ def create_app():
 
     supabase: Client = create_client(
         os.environ.get("SUPABASE_URL"),
-        os.environ.get("SUPABASE_PUBLISHABLE_KEY")
+        os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
     )
 
     CORS(app)
@@ -40,7 +40,7 @@ def register_routes(app: Flask, supabase: Client):
     @app.get("/api/scores")
     def list_scores():
         res = supabase.table("scores").select("*").order("updated_at", desc=True).execute()
-        return res.data
+        return jsonify(res.data)
 
     @app.post("/api/scores")
     def upload_score():
@@ -62,7 +62,7 @@ def register_routes(app: Flask, supabase: Client):
 
         try:
             supabase.storage.from_(BUCKET_NAME).upload(
-                file_path=stored_filename,
+                path=stored_filename,
                 file=file_bytes,
                 file_options={"content-type": "application/pdf"}
             )
@@ -93,7 +93,7 @@ def register_routes(app: Flask, supabase: Client):
         if "title" in payload:
             update_data["title"] = payload["title"]
         if "pageCount" in payload:
-            update_data["pageCount"] = payload["pageCount"]
+            update_data["page_count"] = payload["pageCount"]
         if "lastOpenedPage" in payload:
             update_data["last_opened_page"] = payload["lastOpenedPage"]
 
