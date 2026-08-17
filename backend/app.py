@@ -31,6 +31,16 @@ def create_app():
 def allowed_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def format_annotation(row: dict) -> dict:
+    return {
+        "id": row.get("id"),
+        "scoreId": row.get("score_id"),
+        "pageNumber": row.get("page_number"),
+        "strokes": row.get("data"),
+        "createdAt": row.get("created_at"),
+        "updatedAt": row.get("updated_at"),
+    }
+
 
 def register_routes(app: Flask, supabase: Client):
     @app.get("/api/health")
