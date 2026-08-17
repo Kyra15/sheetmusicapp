@@ -31,6 +31,17 @@ def create_app():
 def allowed_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def format_score(row: dict) -> dict:
+    return {
+        "id": row.get("id"),
+        "title": row.get("title"),
+        "originalFilename": row.get("original_filename"),
+        "pageCount": row.get("page_count"),
+        "lastOpenedPage": row.get("last_opened_page"),
+        "createdAt": row.get("created_at"),
+        "updatedAt": row.get("updated_at"),
+    }
+
 def format_annotation(row: dict) -> dict:
     return {
         "id": row.get("id"),
@@ -50,7 +61,7 @@ def register_routes(app: Flask, supabase: Client):
     @app.get("/api/scores")
     def list_scores():
         res = supabase.table("scores").select("*").order("updated_at", desc=True).execute()
-        return jsonify(res.data)
+        return jsonify([format_score(r) for r in res.data])
 
     @app.post("/api/scores")
     def upload_score():
@@ -85,15 +96,16 @@ def register_routes(app: Flask, supabase: Client):
             "original_filename": original_filename,
             "page_count": page_count,
         }
+
         res = supabase.table("scores").insert(payload).execute()
-        return jsonify(res.data[0]), 201
+        return jsonify(format_score(res.data[0])), 201
 
     @app.get("/api/scores/<int:score_id>")
     def get_score(score_id):
         res = supabase.table("scores").select("*").eq("id", score_id).execute()
         if not res.data:
             abort(404)
-        return jsonify(res.data[0])
+        return jsonify(format_score(res.data[0]))
 
     @app.patch("/api/scores/<int:score_id>")
     def update_score(score_id):
@@ -116,8 +128,7 @@ def register_routes(app: Flask, supabase: Client):
         res = supabase.table("scores").update(update_data).eq("id", score_id).execute()
         if not res.data:
             abort(404)
-
-        return jsonify(res.data[0])
+        return jsonify(format_score(res.data[0]))
 
     @app.delete("/api/scores/<int:score_id>")
     def delete_score(score_id):
@@ -147,7 +158,7 @@ def register_routes(app: Flask, supabase: Client):
             abort(404)
 
         res = supabase.table("page_annotations").select("*").eq("score_id", score_id).execute()
-        return jsonify(res.data)
+        return jsonify([format_annotation(r) for r in res.data])
 
     @app.put("/api/scores/<int:score_id>/annotations/<int:page_number>")
     def upsert_annotation(score_id, page_number):
@@ -169,8 +180,7 @@ def register_routes(app: Flask, supabase: Client):
         res = supabase.table("page_annotations").upsert(
             annotation_data, on_conflict="score_id,page_number"
         ).execute()
-
-        return jsonify(res.data[0])
+        return jsonify(format_annotation(res.data[0]))
 
     @app.delete("/api/scores/<int:score_id>/annotations/<int:page_number>")
     def clear_annotation(score_id, page_number):
