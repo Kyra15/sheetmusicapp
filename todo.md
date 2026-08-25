@@ -1,10 +1,12 @@
 - [ ] fix nod sensitivity to save between switching pages
+- [ ] fix scaling pdfs on screen
 - [X] fix fonts
 - [X] fix naming
 - [X] get rid of composer attribute?
 - [X] allow for file renaming
 - [X] understand the vite stuff
 - [ ] undo and redo
+- [ ] local library storage rather than universal (what i have rn)
 - [X] fix tool highlighting
 - [X] fix tool icons and titles
 - [ ] add metronome
