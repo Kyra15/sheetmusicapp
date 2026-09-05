@@ -31,7 +31,7 @@ export function ScoreViewer({ score, onBack, onScorePatched }: ScoreViewerProps)
   const [hasSelection, setHasSelection] = useState(false);
   const [pageSize, setPageSize] = useState({ width: 0, height: 0 });
   const [playingMode, setPlayingMode] = useState(false);
-  const [containerWidth, setContainerWidth] = useState(0);
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState(score.title);
@@ -45,8 +45,8 @@ export function ScoreViewer({ score, onBack, onScorePatched }: ScoreViewerProps)
     const el = stageRef.current;
     if (!el) return;
     const observer = new ResizeObserver((entries) => {
-      const w = entries[0]?.contentRect.width;
-      if (w) setContainerWidth(Math.floor(w));
+      const rect = entries[0]?.contentRect;
+      if (rect) setContainerSize({ width: Math.floor(rect.width), height: Math.floor(rect.height) });
     });
     observer.observe(el);
     return () => observer.disconnect();
@@ -177,9 +177,15 @@ const commitTitleChange = async () => {
       <div className="score-viewer__stage" ref={stageRef}>
         {loading && <p className="score-viewer__status">Loading score…</p>}
         {error && <p className="score-viewer__status score-viewer__status--error">{error}</p>}
-        {pdf && containerWidth > 0 && (
-          <div className="score-viewer__page" style={{ width: pageSize.width || containerWidth }}>
-            <PdfPageCanvas pdf={pdf} pageNumber={pageNumber} containerWidth={Math.min(containerWidth, 900)} onRendered={setPageSize} />
+        {pdf && containerSize.width > 0 && (
+          <div className="score-viewer__page" style={{ width: pageSize.width || containerSize.width }}>
+            <PdfPageCanvas
+              pdf={pdf}
+              pageNumber={pageNumber}
+              containerWidth={Math.min(containerSize.width, 900)}
+              containerHeight={containerSize.height}
+              onRendered={setPageSize}
+            />
             {annotationsLoaded && pageSize.width > 0 && (
               <AnnotationCanvas
                 ref={annotationRef}

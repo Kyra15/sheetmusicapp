@@ -26,15 +26,26 @@ const STATUS_COPY: Record<string, string> = {
 
 export function PlayingMode({ pdf, pageNumber, totalPages, strokes, onNextPage, onPrevPage, onExit }: PlayingModeProps) {
   const [pageSize, setPageSize] = useState({ width: 0, height: 0 });
-  const [containerWidth, setContainerWidth] = useState(() => Math.min(window.innerWidth, 900));
+  const [containerSize, setContainerSize] = useState(() => ({    
+    width: Math.min(window.innerWidth, 900),
+    height: window.innerHeight - 24,
+  }));
   const [sensitivity, setSensitivity] = useState(0.5);
   const [showSettings, setShowSettings] = useState(false);
   const [flashConfirm, setFlashConfirm] = useState(false);
 
   useEffect(() => {
-    const onResize = () => setContainerWidth(Math.min(window.innerWidth, 900));
+    const onResize = () =>
+      setContainerSize({
+        width: Math.min(window.innerWidth, 900),
+        height: window.innerHeight - 24,
+      });
     window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    window.visualViewport?.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.visualViewport?.removeEventListener("resize", onResize);
+    };
   }, []);
 
   const handleNod = useCallback(() => {
@@ -66,9 +77,17 @@ export function PlayingMode({ pdf, pageNumber, totalPages, strokes, onNextPage, 
     <div className="playing-mode">
       <video ref={videoRef} className="playing-mode__video-hidden" muted playsInline />
 
-      <div className="playing-mode__page-stage" style={{ width: containerWidth }}>
-        <PdfPageCanvas pdf={pdf} pageNumber={pageNumber} containerWidth={containerWidth} onRendered={setPageSize} />
-        {pageSize.width > 0 && <StaticStrokesOverlay strokes={strokes} width={pageSize.width} height={pageSize.height} />}
+      <div className="playing-mode__page-stage" style={{ width: containerSize.width, height: containerSize.height }}>
+        <div className="playing-mode__page-frame" style={{ width: pageSize.width || undefined, height: pageSize.height || undefined }}>
+          <PdfPageCanvas
+            pdf={pdf}
+            pageNumber={pageNumber}
+            containerWidth={containerSize.width}
+            containerHeight={containerSize.height}
+            onRendered={setPageSize}
+          />
+          {pageSize.width > 0 && <StaticStrokesOverlay strokes={strokes} width={pageSize.width} height={pageSize.height} />}
+        </div>
       </div>
 
       {/* tap to also flip pages */}

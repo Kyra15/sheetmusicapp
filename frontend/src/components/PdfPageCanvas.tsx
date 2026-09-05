@@ -5,11 +5,12 @@ interface PdfPageCanvasProps {
   pdf: PDFDocumentProxy;
   pageNumber: number;
   /** available width in CSS px to fit the page into */
+  containerHeight?: number;
   containerWidth: number;
   onRendered: (size: { width: number; height: number }) => void;
 }
 
-export function PdfPageCanvas({ pdf, pageNumber, containerWidth, onRendered }: PdfPageCanvasProps) {
+export function PdfPageCanvas({ pdf, pageNumber, containerWidth, containerHeight, onRendered }: PdfPageCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const renderTaskRef = useRef<ReturnType<import("pdfjs-dist").PDFPageProxy["render"]> | null>(null);
 
@@ -21,7 +22,11 @@ export function PdfPageCanvas({ pdf, pageNumber, containerWidth, onRendered }: P
       if (cancelled) return;
 
       const unscaledViewport = page.getViewport({ scale: 1 });
-      const scale = containerWidth / unscaledViewport.width;
+      const widthScale = containerWidth / unscaledViewport.width;
+      const scale =
+        containerHeight && containerHeight > 0
+          ? Math.min(widthScale, containerHeight / unscaledViewport.height)
+          : widthScale;
       const viewport = page.getViewport({ scale });
 
       const canvas = canvasRef.current;
@@ -56,7 +61,7 @@ export function PdfPageCanvas({ pdf, pageNumber, containerWidth, onRendered }: P
       cancelled = true;
       renderTaskRef.current?.cancel();
     };
-  }, [pdf, pageNumber, containerWidth, onRendered]);
+  }, [pdf, pageNumber, containerWidth, containerHeight, onRendered]);
 
   return <canvas ref={canvasRef} className="pdf-page-canvas" />;
 }
